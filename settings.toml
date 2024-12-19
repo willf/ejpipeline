@@ -1,0 +1,14 @@
+[default]
+WORKING_DIR = "/tmp"
+SINK_DIR = "/tmp/sink"
+SOURCE_DIR = "/tmp/source"
+
+[development]
+
+[staging]
+
+[production]
+
+[logging]
+level = "info"
+formatter = "%(asctime)s [%(name)40.40s] %(levelname)-8s %(message)s"
