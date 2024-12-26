@@ -46,7 +46,7 @@ class BaseETL:
 
     def run_all(self, use_cache=True):
         classes = set(utils.etl_classes(MY_DIRECTORY))
-        self.logger.info(f"Running ETLs")
+        self.logger.info("Running ETLs")
         for cls in classes:
             etl = cls()
             self.logger.info(f"Running {etl.etl_name()}")
