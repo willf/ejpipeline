@@ -12,10 +12,13 @@ if settings.get("DATA_PATH"):
 else:
     settings.DATA_PATH = (
         pathlib.Path(data_pipeline.__file__).resolve().parent.parent.parent
-        / "ejpipeline_data",
+        / "ejpipeline_data"
     )
 
+if type(settings.DATA_PATH) is list:
+    settings.DATA_PATH = settings.DATA_PATH[0]
 
+print(settings.DATA_PATH)
 settings.DATA_PATH.mkdir(parents=True, exist_ok=True)
 
 # `envvar_prefix` = export envvars with `export EDGI_DATA_PATH=bar`.

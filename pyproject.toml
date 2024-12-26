@@ -5,7 +5,9 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "click>=8.1.8",
     "dynaconf>=3.2.6",
+    "pytest-playwright>=0.6.2",
     "requests>=2.32.3",
 ]
 

@@ -1,46 +1,66 @@
 import pathlib
 import data_pipeline.utils as utils
+import click
+
+MY_DIRECTORY = pathlib.Path(__file__).parent
 
 
 class BaseETL:
+    def __init__(self):
+        self.logger = utils.get_logger(__name__)
+
     def etl_name(self):
         return pathlib.Path(__file__).stem
 
-    def extract(self):
-        return (None, None)
-
-    def transform(self, data):
-        return data
-
-    def save_source(self, data, source_filename):
+    def save_source_path(self, source_filename):
         etl_name = self.etl_name()
         source_path = utils.get_source_sink_path(etl_name)
         # ensure the directory exists
         source_path.mkdir(parents=True, exist_ok=True)
-        source_filename = source_path / source_filename
-        with open(source_filename, "wb") as f:
-            f.write
+        return source_path / source_filename
 
-    def load(self, data, sink_filename):
-        etl_name = self.etl_name()
-        sink_path = utils.get_sink_path(etl_name)
-        # ensure the directory exists
+    # The following are the methods that need to be implemented by the child classes
 
-        sink_path.mkdir(parents=True, exist_ok=True)
-        sink_filename = sink_path / sink_filename
-        with open(sink_filename, "wb") as f:
-            f.write(data)
+    def already_etled(self):
+        return False
+
+    def extract(self):
+        pass
+
+    def transform(self):
+        pass
+
+    def load(self):
+        pass
 
     def run(self, use_cache=True):
-        # if using cache, check if there are any files in the sink directory
-        etl_name = self.etl_name()
-        sink_path = utils.get_sink_path(etl_name)
-        if use_cache and sink_path.exists() and len(list(sink_path.iterdir())) > 0:
-            return False
-        data, filename = self.extract()
-        if data is None:
-            return False
-        self.save_source(data, filename)
-        transformed_data = self.transform(data)
-        self.load(transformed_data, filename)
+        if use_cache and self.already_etled():
+            self.logger.info(
+                f"Data already processed for {self.etl_name()}. Check {utils.get_etl_path(self.etl_name())}"
+            )
+            return
+        self.extract()
+        self.transform()
+        self.load()
         return True
+
+    def run_all(self, use_cache=True):
+        classes = set(utils.etl_classes(MY_DIRECTORY))
+        self.logger.info(f"Running ETLs")
+        for cls in classes:
+            etl = cls()
+            self.logger.info(f"Running {etl.etl_name()}")
+            etl.run(use_cache=use_cache)
+
+
+@click.command()
+@click.option("--force", is_flag=True, default=False, help="Force the ETL to rerun")
+def run_all(force):
+    etl = BaseETL()
+    use_cache = not force
+    etl.logger.info(f"Calling run_all with force={force}")
+    BaseETL().run_all(use_cache=use_cache)
+
+
+if __name__ == "__main__":
+    run_all()
