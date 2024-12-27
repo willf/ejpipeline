@@ -1,4 +1,5 @@
 [default]
+DATA_PATH = "/Volumes/willf/edgi/ejpipeline_data"
 WORKING_DIR = "/tmp"
 SINK_DIR = "/tmp/sink"
 SOURCE_DIR = "/tmp/source"

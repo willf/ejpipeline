@@ -1,0 +1,114 @@
+# TITLE: Required. The title of the deposition.
+# Add a literal title, or use a variable to set the title dynamically.
+title = "$title"
+
+# DESCRIPTION: A description of the deposition.
+# description = "A description of the deposition"
+
+description = "$description"
+
+# CREATORS: Required.The creators/authors of the deposition.
+# Each array element is an object with the attributes:
+# * name: Name of creator in the format Family name, Given names
+# * affiliation: Affiliation of creator (optional).
+# * orcid: ORCID identifier of creator (optional).
+# * gnd: GND identifier of creator (optional).
+# creators = [
+#  { name = 'Doe, John', affiliation = 'Zenodo' },
+#  { name = 'Smith, Jane', affiliation = 'Zenodo', orcid = '0000-0002-1694-233X' },
+#  { name = 'Kowalski, Jack', affiliation = 'Zenodo', gnd = '170118215' },
+# ]
+creators = [
+        { name = "Fitzgerald, Will", affiliation = 'EDGI', orcid = '0000-0002-2668-9286'},
+        { name = "Gehrke, Gretchen", affiliation = "EDGI", orcid = '0000-0002-1881-3291' },
+]
+
+communities = [
+       { identifier = "edgi" }
+]
+
+# PUBLICATION_DATE: Required. Will default to day of upload if not provided
+# publication_date = '2024-11-02'
+
+# ACCESS_RIGHT: Required. Will default to 'open' if not provided
+# access_right = "open" # Open Access
+# access_right = "embargoed" # Embargoed Access
+# access_right = "restricted" # Restricted Access
+# access_right = "closed" # Closed Access
+
+# LICENSE: Required if access_right is open or embargoed. However, defaults to cc-zrto for datasets
+# And cc-by for others
+# See https://zenodo.org/api/vocabularies/licenses?page=1&size=1000&sort=title for list of acceptable licences
+# licence = "cc0-1.0"
+
+# EMBARGO DATE is required if access_right is 'embargoed'
+# embargo_date = '2025-01-01'
+
+# ACCESS_CONDITIONS is required if access_right is 'restricted'
+# Specify the conditions under which you grant users access to the files in your upload.
+# User requesting access will be asked to justify how they fulfil the conditions.
+# Based on the justification, you decide who to grant/deny access. You are not allowed to
+# charge users for granting access to data hosted on Zenodo
+
+# DOI: Digital Object Identifier. Did a publisher already assign a DOI to
+# your deposited files? If not, leave the field empty and we will register a
+# new DOI for you when you publish. A DOI allow others to easily and
+# unambiguously cite your deposition.
+# doi: 10.5281/zenodo.14028089
+
+# KEYWORDS: Free form keywords for this deposition. Not required. Use an array of strings.
+keywords = [
+        "EDGI", 
+        "Environmental Data & Governance Initiative",
+]
+
+# NOTES: Additition notes. Not required.
+# notes = "An additional note"
+
+# UPLOAD_TYPE: Required. Must be one of the following, so
+# uncomment one.
+# upload_type = "publication" # Publication
+# upload_type = "poster" # Poster
+# upload_type = "presentation" # Presentation
+upload_type = "dataset" # Dataset
+# upload_type = "image" # Image
+# upload_type = "video" # Video/Audio
+# upload_type = "software" # Software
+# upload_type = "lesson" # Lesson
+# upload_type = "physicalobject" # Physical object
+# upload_type = "other" # Other
+
+# REQUIRED IF upload_type is "image"
+# image_type = "figure" # Figure
+# image_type = "plot" # Plot
+# image_type = "drawing" # Drawing
+# image_type = "diagram" # Diagram
+# image_type = "photo" # Photo
+# image_type = "other" # Other
+
+# OPTIONAL
+# publication_type = "annotationcollection" # Annotation collection
+# publication_type = "book" # Book
+# publication_type = "section" # Book section
+# publication_type = "conferencepaper" # Conference paper
+# publication_type = "datamanagementplan" # Data management plan
+# publication_type = "article" # Journal article
+# publication_type = "patent" # Patent
+# publication_type = "preprint" # Preprint
+# publication_type = "deliverable" # Project deliverable
+# publication_type = "milestone" # Project milestone
+# publication_type = "proposal" # Proposal
+# publication_type = "report" # Report
+# publication_type = "softwaredocumentation" # Software documentation
+# publication_type = "taxonomictreatment" # Taxonomic treatment
+# publication_type = "technicalnote" # Technical note
+# publication_type = "thesis" # Thesis
+# publication_type = "workingpaper" # Working paper
+# publication_type = "other" # Other
+
+# OTHER METADATA options are defined here: https://developers.zenodo.org/?shell#representation
+# and can be defined as part of this.
+
+#grants = [
+#        {id = "10.13039/100000001"},
+#]

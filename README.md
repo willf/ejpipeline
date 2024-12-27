@@ -6,8 +6,28 @@ This repository contains the code for the Environmental Justice Data Pipeline (E
 
 ## Installation
 
-tdb
+The current way to install the EJPipeline to clone the repository, and run it using `uv`. For example,
+if you have `gh` installed, you can run:
+
+```bash
+gh repo clone willf/ejpipeline
+cd ejpipeline
+```
 
 ## Use
 
-tbd
+To run the pipeline, you can use `uv` to run the `etl/base.py` script from the ejpipeline directory. For example:
+
+```bash
+PYTHONPATH=`pwd`:$PYTHONPATH uv run data_pipeline/etl/base.py
+```
+
+Use `--force` to force the pipeline to run, even if the data is up to date.
+
+You will likely need to install playwright browsers the first time.
+
+`uv run playwright install`
+
+## Development
+
+ETL modules are located in the `data_pipeline/etl` directory. Each module should be a subclass of `BaseETL` and should implement the `extract`, `transform`, and `load` methods as necessary, as well as an `already_etled` method to check if the data is already up to date. See, for example, the `data_pipeline/etl/calenviroscreen/` module.
