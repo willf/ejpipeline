@@ -13,9 +13,9 @@ class CalEnviroScreenETL(BaseETL):
             "CalEnviroScreen 4.0 Excel and Data Dictionary PDF"
         )
         self.shapefile_text = "CalEnviroScreen 4.0 SHP file"
-        self.df = None
         self.logger = utils.get_logger(__name__)
 
+    @classmethod
     def etl_name(self):
         return "calenviroscreen"
 

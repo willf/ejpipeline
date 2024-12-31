@@ -1,6 +1,5 @@
 import pathlib
 import data_pipeline.utils as utils
-import click
 
 MY_DIRECTORY = pathlib.Path(__file__).parent
 
@@ -9,6 +8,7 @@ class BaseETL:
     def __init__(self):
         self.logger = utils.get_logger(__name__)
 
+    @classmethod
     def etl_name(self):
         return pathlib.Path(__file__).stem
 
@@ -22,7 +22,9 @@ class BaseETL:
     # The following are the methods that need to be implemented by the child classes
 
     def already_etled(self):
-        return False
+        # Note this just checks the sink directory
+        destination = utils.get_source_sink_path(self.etl_name())
+        return destination.exists() and len(list(destination.iterdir())) > 0
 
     def extract(self):
         pass
@@ -33,7 +35,19 @@ class BaseETL:
     def load(self):
         pass
 
-    def run(self, use_cache=True):
+    def dry_run(self):
+        cached = self.already_etled()
+        if cached:
+            self.logger.info(
+                f"Dry run: {self.etl_name()}. Data already processed. Check {utils.get_etl_path(self.etl_name())}"
+            )
+        else:
+            self.logger.info(f"Fake running {self.etl_name()}")
+
+    def run(self, use_cache=True, dry_run=False):
+        if dry_run:
+            self.dry_run()
+            return True
         if use_cache and self.already_etled():
             self.logger.info(
                 f"Data already processed for {self.etl_name()}. Check {utils.get_etl_path(self.etl_name())}"
@@ -44,23 +58,20 @@ class BaseETL:
         self.load()
         return True
 
-    def run_all(self, use_cache=True):
-        classes = set(utils.etl_classes(MY_DIRECTORY))
-        self.logger.info("Running ETLs")
+    def run_all(self, use_cache=True, dry_run=False, etl_names=None):
+        message = "Running ETLs"
+        classes = set(utils.etl_classes(MY_DIRECTORY, self.__class__))
+        if etl_names:
+            classes = [cls for cls in classes if cls.etl_name() in etl_names]
+            not_found_names = [name for name in etl_names if name not in classes]
+            if not_found_names:
+                for name in not_found_names:
+                    self.logger.error(f"ETL not found: {name}")
+        else:
+            message = "Running all ETLs"
+        if dry_run:
+            message = "Dry run: " + message
+        self.logger.info(message)
         for cls in classes:
             etl = cls()
-            self.logger.info(f"Running {etl.etl_name()}")
-            etl.run(use_cache=use_cache)
-
-
-@click.command()
-@click.option("--force", is_flag=True, default=False, help="Force the ETL to rerun")
-def run_all(force):
-    etl = BaseETL()
-    use_cache = not force
-    etl.logger.info(f"Calling run_all with force={force}")
-    BaseETL().run_all(use_cache=use_cache)
-
-
-if __name__ == "__main__":
-    run_all()
+            etl.run(use_cache=use_cache, dry_run=dry_run)
