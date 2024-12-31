@@ -48,5 +48,5 @@ class CDCPlacesETL(BaseETL):
 
 
 if __name__ == "__main__":
-    etl = CdcPlacesETL()
+    etl = CDCPlacesETL()
     etl.run(use_cache=True)

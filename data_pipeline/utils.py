@@ -1,7 +1,6 @@
 import logging
 from config import settings
 from pathlib import Path
-import pathlib
 import importlib
 import inspect
 from rich.logging import RichHandler
