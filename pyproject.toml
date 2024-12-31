@@ -9,6 +9,7 @@ dependencies = [
     "dynaconf>=3.2.6",
     "pytest-playwright>=0.6.2",
     "requests>=2.32.3",
+    "rich>=13.9.4",
 ]
 
 [dependency-groups]
