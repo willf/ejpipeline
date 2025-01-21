@@ -7,10 +7,10 @@ class EpaAirToxScreenETL(BaseETL):
     def __init__(self):
         self.directory_links = [
             "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Cancer/BySource/",
-            # "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Cancer/ByPollutant/",
-            # "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Ambient%20Concentrations/",
-            # "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Exposure%20Concentrations/",
-            # "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Pollutant%20Summaries/",
+            "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Cancer/ByPollutant/",
+            "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Ambient%20Concentrations/",
+            "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Exposure%20Concentrations/",
+            "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Pollutant%20Summaries/",
         ]
         self.direct_links = [
             "https://www.epa.gov/system/files/documents/2024-05/airtoxscreen_2020-tsd.pdf",
@@ -63,6 +63,9 @@ class EpaAirToxScreenETL(BaseETL):
                 destination = self.save_source_path(
                     url.removeprefix("https://gaftp.epa.gov/")
                 )
+                if destination.exists():
+                    self.logger.debug(f"{destination} already exists. Skipping.")
+                    continue
                 print(f"Downloading {url} to {destination}")
                 downloaded_amount = utils.download_url(url, destination, verify=False)
                 downloaded_amount = 0
