@@ -44,6 +44,9 @@ class EpaAirToxScreenETL(BaseETL):
             destination = self.save_source_path(
                 file.removeprefix("https://www.epa.gov/")
             )
+            if destination.exists():
+                self.logger.debug(f"{destination} already exists. Skipping.")
+                continue
             downloaded_amount = utils.download_url(file, destination)
             files_downloaded += 1
             amt_downloaded += downloaded_amount
