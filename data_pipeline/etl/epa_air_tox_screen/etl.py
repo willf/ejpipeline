@@ -7,10 +7,10 @@ class EpaAirToxScreenETL(BaseETL):
     def __init__(self):
         self.directory_links = [
             "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Cancer/BySource/",
-            "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Cancer/ByPollutant/",
-            "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Ambient%20Concentrations/",
-            "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Exposure%20Concentrations/",
-            "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Pollutant%20Summaries/",
+            # "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Cancer/ByPollutant/",
+            # "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Ambient%20Concentrations/",
+            # "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Exposure%20Concentrations/",
+            # "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Pollutant%20Summaries/",
         ]
         self.direct_links = [
             "https://www.epa.gov/system/files/documents/2024-05/airtoxscreen_2020-tsd.pdf",
@@ -57,9 +57,13 @@ class EpaAirToxScreenETL(BaseETL):
                 browser = p.chromium.launch(headless=True)
                 urls = list(utils.ftp_like_download_list(directory, browser))
             for url in urls:
+                if url.endswith("/"):
+                    print(f"Skipping directory {url}")
+                    continue
                 destination = self.save_source_path(
                     url.removeprefix("https://gaftp.epa.gov/")
                 )
+                print(f"Downloading {url} to {destination}")
                 downloaded_amount = utils.download_url(url, destination, verify=False)
                 downloaded_amount = 0
                 files_downloaded += 1
