@@ -58,7 +58,7 @@ class EpaAirToxScreenETL(BaseETL):
                 urls = list(utils.ftp_like_download_list(directory, browser))
             for url in urls:
                 if url.endswith("/"):
-                    print(f"Skipping directory {url}")
+                    self.logger.info(f"Skipping directory {url}")
                     continue
                 destination = self.save_source_path(
                     url.removeprefix("https://gaftp.epa.gov/")
