@@ -7,6 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "click>=8.1.8",
     "dynaconf>=3.2.6",
+    "htmllistparse>=0.6.1",
     "pytest-playwright>=0.6.2",
     "requests>=2.32.3",
     "rich>=13.9.4",

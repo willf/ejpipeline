@@ -5,16 +5,17 @@ from pathlib import Path
 def create_etl_template(file_name):
     # Extract class name and ETL name from the file name
     class_name = "".join(word.capitalize() for word in file_name.split("_")) + "ETL"
-    etl_name = file_name.replace("_", " ")
+    etl_name = file_name
 
     # Template for the ETL class
     template = f"""
 from data_pipeline.etl.base import BaseETL
 from data_pipeline import utils
-import requests
 
 class {class_name}(BaseETL):
     def __init__(self):
+        self.source_url = None # TODO: Add the source URL
+        self.file_name = None # TODO: Add the file name
         self.logger = utils.get_logger(__name__)
 
     @classmethod
@@ -23,11 +24,10 @@ class {class_name}(BaseETL):
 
     def extract(self):
         self.logger.info(f"Extracting data from {{self.etl_name()}}")
-        # Add extraction logic here
-        destination = self.save_source_path("some_file.csv")
-        self.logger.info(
-            f"Downloaded {{self.etl_name()}} data files to {{destination}}"
-        )
+        destination = self.save_source_path(self.file_name)
+        downloaded_amount = utils.download_url(self.source_url, destination)
+        self.logger.info(f"Downloaded {{self.etl_name()}} data files to {{destination}}")
+        return downloaded_amount
 
     def transform(self):
         # self.logger.info(f"Transforming data for {{self.etl_name()}}")

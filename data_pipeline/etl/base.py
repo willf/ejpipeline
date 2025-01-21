@@ -61,9 +61,12 @@ class BaseETL:
     def run_all(self, use_cache=True, dry_run=False, etl_names=None):
         message = "Running ETLs"
         classes = set(utils.etl_classes(MY_DIRECTORY, self.__class__))
+        input_class_names = [cls.etl_name() for cls in classes]
         if etl_names:
             classes = [cls for cls in classes if cls.etl_name() in etl_names]
-            not_found_names = [name for name in etl_names if name not in classes]
+            not_found_names = [
+                name for name in etl_names if name not in input_class_names
+            ]
             if not_found_names:
                 for name in not_found_names:
                     self.logger.error(f"ETL not found: {name}")
