@@ -14,9 +14,7 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = [
-    "coverage>=7.6.8",
-    "ipython>=8.30.0",
-    "pytest>=8.3.4",
-    "ruff>=0.8.2",
-]
+dev = ["coverage>=7.6.8", "ipython>=8.30.0", "pytest>=8.3.4", "ruff>=0.8.2"]
+
+[project.scripts]
+ejpipeline = "ejpipeline.data_pipeline:etl.cli"

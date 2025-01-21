@@ -60,7 +60,7 @@ class EpaAirToxScreenETL(BaseETL):
                 destination = self.save_source_path(
                     url.removeprefix("https://gaftp.epa.gov/")
                 )
-                # downloaded_amount = utils.download_url(url, destination, verify=False)
+                downloaded_amount = utils.download_url(url, destination, verify=False)
                 downloaded_amount = 0
                 files_downloaded += 1
 

@@ -15,10 +15,10 @@ from data_pipeline.etl.base import BaseETL
     help="Simulate the ETL run without making any changes",
 )
 @click.argument("etl_name", required=False, nargs=-1)
-def run_all(force, dry_run, etl_name):
+def main(force, dry_run, etl_name):
     use_cache = not force
     BaseETL().run_all(use_cache=use_cache, dry_run=dry_run, etl_names=etl_name)
 
 
 if __name__ == "__main__":
-    run_all()
+    main()
