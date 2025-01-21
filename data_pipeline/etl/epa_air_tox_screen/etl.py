@@ -40,16 +40,16 @@ class EpaAirToxScreenETL(BaseETL):
         self.logger.info(f"Extracting data from {self.etl_name()}")
         amt_downloaded = 0
         files_downloaded = 0
-        # for file in self.direct_links:
-        #     destination = self.save_source_path(
-        #         file.removeprefix("https://www.epa.gov/")
-        #     )
-        #     downloaded_amount = utils.download_url(file, destination)
-        #     files_downloaded += 1
-        #     amt_downloaded += downloaded_amount
-        #     self.logger.info(
-        #         f"Downloaded {self.etl_name()} data files to {destination}"
-        #     )
+        for file in self.direct_links:
+            destination = self.save_source_path(
+                file.removeprefix("https://www.epa.gov/")
+            )
+            downloaded_amount = utils.download_url(file, destination)
+            files_downloaded += 1
+            amt_downloaded += downloaded_amount
+            self.logger.info(
+                f"Downloaded {self.etl_name()} data files to {destination}"
+            )
         for directory in self.directory_links:
             self.logger.info(f"Extracting data from {directory} for {self.etl_name()}")
             urls = []
