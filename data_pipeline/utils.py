@@ -154,10 +154,11 @@ def ftp_like_download_list(url: str, browser):
     links = re.findall(r'href="(.*?)"', page.content())
     # for each link, if it's a directory, recurse
     # if it's a file, yield it
-
     for link in links:
         # remove any query params
         link = link.split("?")[0]
+        if link == "/" or link == ".." or link == "." or link == "":
+            continue
         if link.endswith("/"):
             logger.info(f"Recursing into {link}")
             yield from ftp_like_download_list(url + link, browser)

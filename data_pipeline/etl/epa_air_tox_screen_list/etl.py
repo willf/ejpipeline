@@ -3,7 +3,13 @@ from data_pipeline import utils
 from playwright.sync_api import sync_playwright
 
 
-class EpaAirToxScreenETL(BaseETL):
+class EpaAirToxScreenETLList(BaseETL):
+    """
+    This ETL simply prints out all of the URLs that are to be downloaded for the EPA Air Tox Screen dataset.
+    Useful to Internet Archive use.
+
+    """
+
     def __init__(self):
         self.directory_links = [
             "https://gaftp.epa.gov/rtrmodeling_public/AirToxScreen/2020/Cancer/BySource/",
@@ -34,54 +40,19 @@ class EpaAirToxScreenETL(BaseETL):
 
     @classmethod
     def etl_name(cls):
-        return "epa_air_tox_screen"
+        return "epa_air_tox_screen_list"
 
     def extract(self):
-        self.logger.info(f"Extracting data from {self.etl_name()}")
-        amt_downloaded = 0
-        files_downloaded = 0
         for file in self.direct_links:
-            destination = self.save_source_path(
-                file.removeprefix("https://www.epa.gov/")
-            )
-            if destination.exists():
-                self.logger.debug(f"{destination} already exists. Skipping.")
-                continue
-            downloaded_amount = utils.download_url(file, destination)
-            files_downloaded += 1
-            amt_downloaded += downloaded_amount
-            self.logger.info(
-                f"Downloaded {self.etl_name()} data files to {destination}"
-            )
+            print(file)
         for directory in self.directory_links:
-            self.logger.info(f"Extracting data from {directory} for {self.etl_name()}")
-            urls = []
             with sync_playwright() as p:
                 browser = p.chromium.launch(headless=True)
                 urls = list(utils.ftp_like_download_list(directory, browser))
             for url in urls:
                 if url.endswith("/"):
-                    self.logger.info(f"Skipping directory {url}")
                     continue
-                destination = self.save_source_path(
-                    url.removeprefix("https://gaftp.epa.gov/")
-                )
-                if destination.exists():
-                    self.logger.debug(f"{destination} already exists. Skipping.")
-                    continue
-                print(f"Downloading {url} to {destination}")
-                downloaded_amount = utils.download_url(url, destination, verify=False)
-                # downloaded_amount = 0
-                files_downloaded += 1
-
-                amt_downloaded += downloaded_amount
-            self.logger.info(
-                f"Downloaded {self.etl_name()} data files to {destination}"
-            )
-        self.logger.info(
-            f"Downloaded {files_downloaded} {self.etl_name()} data files to {destination}"
-        )
-        return amt_downloaded
+                print(url)
 
     def transform(self):
         # self.logger.info(f"Transforming data for {self.etl_name()}")
@@ -95,5 +66,5 @@ class EpaAirToxScreenETL(BaseETL):
 
 
 if __name__ == "__main__":
-    etl = EpaAirToxScreenETL()
+    etl = EpaAirToxScreenETLList()
     etl.run(use_cache=True)
